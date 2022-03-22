@@ -53,5 +53,5 @@ func Part1() {
 	descLength := strconv.Itoa(len(desc))
 
 	fmt.Printf("Asc %s\n", ascLength)
-	fmt.Printf("Desc %s \n", descLength)
+	fmt.Printf("Desc %s\n", descLength)
 }

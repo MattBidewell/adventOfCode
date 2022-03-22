@@ -14,7 +14,7 @@ import (
 )
 
 func main() {
-	title()
+	printTitle()
 	time.Sleep(1 * time.Second)
 	for i:=1; i < 31; i++ {
 		runDay(i)
@@ -37,7 +37,7 @@ func runDay(day int) {
 			day3.Part2()
 		case 4:
 			day4.Part1()
-			// day4.Part2()
+			day4.Part2()
 		// case 5:
 		// 	day5.Part1()
 		// 	day5.Part2()
@@ -121,10 +121,9 @@ func runDay(day int) {
 			os.Exit(0)
 	}
 	color.Yellow("****")
-	fmt.Println("\n")
 }
 
-func title() {
+func printTitle() {
 	fmt.Println(".d888b.  .d88b.  .d888b.  db")
 	fmt.Println("VP  `8D .8P  88. VP  `8D o88")
 	fmt.Println("   odD' 88  d'88    odD'  88")

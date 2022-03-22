@@ -1,6 +1,12 @@
 package day4
 
 type Value struct {
-	digit int
-	isMarked bool
+	value 		int
+	isMarked 	bool
+}
+
+type Card struct {
+	rows 					[][]Value
+	columns 			[][]Value
+	isCompleted 	bool
 }

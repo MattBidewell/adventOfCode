@@ -52,5 +52,5 @@ import (
 	 }
 
 	 total := sub.depth * sub.horizontal
-	 fmt.Printf("Sub total depth * hoz = %d ", total)
+	 fmt.Printf("Sub total depth * hoz = %d \n", total)
  }
