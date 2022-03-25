@@ -126,7 +126,7 @@ func evaluateCard(card Card) bool {
 // evaluate if all items are true
 func evaluateRowOrCol(vals []Value) bool {
 	for _, val := range vals {
-		if val.isMarked == false {
+		if !val.isMarked {
 			return false
 		}
 	}

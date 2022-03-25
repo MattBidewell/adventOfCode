@@ -8,5 +8,4 @@ type Value struct {
 type Card struct {
 	rows 					[][]Value
 	columns 			[][]Value
-	isCompleted 	bool
 }
