@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"time"
 )
 
 
@@ -16,16 +17,37 @@ func Part1() {
 
 	ventPoints := setupPoints(input)
 	board := setUpBoard(999,999)
+	// board := setUpBoard(10,10)
 
 	// printBoard(board, false)
-	// time.Sleep(1 * time.Second)
+	time.Sleep(1 * time.Second)
 	for _, ventPoint := range ventPoints {
-		board = markBoard(board, ventPoint.start, ventPoint.end)
+		board = markBoard(board, ventPoint.start, ventPoint.end, false)
 		// printBoard(board, true)
 		// time.Sleep(1 * time.Second)
 	}
 	awns := evaluateBoard(board)
-	fmt.Println(awns)
+	fmt.Println("Total vents: " + strconv.Itoa(awns))
+}
+
+func Part2() {
+	data := helper.ReadFile("./day5/data1.txt")
+	inputAsString := string(data[:])
+	input := strings.Split(inputAsString, "\n")
+
+	ventPoints := setupPoints(input)
+	board := setUpBoard(999,999)
+	// board := setUpBoard(10,10)
+
+	// printBoard(board, false)
+	time.Sleep(1 * time.Second)
+	for _, ventPoint := range ventPoints {
+		board = markBoard(board, ventPoint.start, ventPoint.end, true)
+		// printBoard(board, true)
+		// time.Sleep(1 * time.Second)
+	}
+	awns := evaluateBoard(board)
+	fmt.Println("Total vents: " + strconv.Itoa(awns))
 }
 
 func setUpBoard(rowSize int, columnSize int) [][]int {
@@ -86,10 +108,10 @@ func setupPoints(input []string) []Vent {
 	return vents
 }
 
-func markBoard(board [][]int, start Point, end Point) [][]int {
+func markBoard(board [][]int, start Point, end Point, part2 bool) [][]int {
+	board[start.x][start.y]++
 	if start.x == end.x {
 		diff := start.y - end.y
-		board[start.x][start.y]++
 
 		for diff != 0 {
 			if diff < 0 {
@@ -103,7 +125,6 @@ func markBoard(board [][]int, start Point, end Point) [][]int {
 		}
 	} else if start.y == end.y {
 		diff := start.x - end.x
-		board[start.x][start.y]++
 
 		for diff != 0 {
 			if diff < 0 {
@@ -112,6 +133,27 @@ func markBoard(board [][]int, start Point, end Point) [][]int {
 			} else {
 				start.x = start.x - 1
 				diff--
+			}
+			board[start.x][start.y]++
+		}
+	} else if(part2) {
+		yDiff := start.y - end.y
+		xDiff := start.x - end.x
+
+		for yDiff != 0 && xDiff != 0 {
+			if yDiff < 0 {
+				start.y = start.y + 1
+				yDiff++
+			} else {
+				start.y = start.y - 1
+				yDiff--
+			}
+			if xDiff < 0 {
+				start.x = start.x + 1
+				xDiff++
+			} else {
+				start.x = start.x - 1
+				xDiff--
 			}
 			board[start.x][start.y]++
 		}

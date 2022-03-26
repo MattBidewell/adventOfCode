@@ -1,6 +1,10 @@
 package main
 
 import (
+	"2021/day1"
+	"2021/day2"
+	"2021/day3"
+	"2021/day4"
 	"2021/day5"
 	"fmt"
 	"os"
@@ -13,7 +17,7 @@ import (
 func main() {
 	printTitle()
 	time.Sleep(1 * time.Second)
-	for i:=5; i < 31; i++ {
+	for i:=1; i < 31; i++ {
 		runDay(i)
 		time.Sleep(1 * time.Second)
 	}
@@ -23,21 +27,21 @@ func main() {
 func runDay(day int) {
 	color.Cyan("\n***** Day " + strconv.Itoa(day))
 	switch(day) {
-		// case 1:
-		// 	day1.Part1()
-		// 	day1.Part2()
-		// case 2:
-		// 	day2.Part1()
-		// 	day2.Part2()
-		// case 3:
-		// 	day3.Part1()
-		// 	day3.Part2()
-		// case 4:
-		// 	day4.Part1()
-		// 	day4.Part2()
+		case 1:
+			day1.Part1()
+			day1.Part2()
+		case 2:
+			day2.Part1()
+			day2.Part2()
+		case 3:
+			day3.Part1()
+			day3.Part2()
+		case 4:
+			day4.Part1()
+			day4.Part2()
 		case 5:
 			day5.Part1()
-			// day5.Part2()
+			day5.Part2()
 		// case 6:
 		// 	day6.Part1()
 		// 	day6.Part2()
