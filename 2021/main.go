@@ -6,6 +6,7 @@ import (
 	"2021/day3"
 	"2021/day4"
 	"2021/day5"
+	"2021/day6"
 	"fmt"
 	"os"
 	"strconv"
@@ -42,9 +43,8 @@ func runDay(day int) {
 		case 5:
 			day5.Part1()
 			day5.Part2()
-		// case 6:
-		// 	day6.Part1()
-		// 	day6.Part2()
+		case 6:
+			day6.Part1And2()
 		// case 7:
 		// 	day7.Part1()
 		// 	day7.Part2()
