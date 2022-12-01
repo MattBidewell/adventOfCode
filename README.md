@@ -7,4 +7,4 @@ Uses GoLang
 
 ## 2022
 
-Uses NodeJS 18.x
+Uses NodeJS 18.x & Typescript
