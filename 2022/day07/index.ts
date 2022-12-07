@@ -6,110 +6,92 @@ console.log(`Day seven`);
 const data = await fs.readFile("day07/data.txt", {encoding: "utf8"});
 // const data = await fs.readFile("day07/test-data.txt", {encoding: "utf8"});
 
-// // function partOne() {
-// //   const commands = data.split("\n");
-// //   let total = 0;
-// //   let previousCommand;
-// //   while(commands.length > 0) {
-// //     const command = commands.shift()
+class Dir {
+    size: number
+    subDirectories: Dir[]
+    dirName: string;
+    parentDir: Dir | null;
+    files: {name:string, size:number}[]
 
-// //     if()
+    constructor(dirName: string, parentDir?: Dir) {
+      this.size = 0;
+      this.dirName = dirName
+      this.parentDir = parentDir ?? null;
+      this.subDirectories = []
+      this.files = [];
+    }
 
-// //     previousCommand = command;
+    addFile(name:string, size:number) {
+      this.files.push({name, size});
+      this.size += size;
+    }
+}
 
-// //   }
-// // }
+class Fs {
+  root: Dir;
+  constructor(dirName: string) {
+    this.root = new Dir(dirName)
+  }
 
-// class Dir {
-//     size: number
-//     subDirectories: Dir[]
-//     dirName: string;
-//     parentDir: Dir | null;
-//     files: {name:string, size:number}[]
+  addDir(parent:Dir, dirName:string) {
+    const dir = new Dir(dirName, parent);
+    parent.subDirectories.push(dir);
+    return dir;
+  }
+}
 
-//     constructor(dirName: string, parentDir?: Dir) {
-//       this.size = 0;
-//       this.dirName = dirName
-//       this.parentDir = parentDir ?? null;
-//       this.subDirectories = []
-//       this.files = [];
-//     }
+function partOne() {
+  const lines = data.split("\n");
 
-//     addFile(name:string, size:number) {
-//       this.files.push({name, size});
-//       this.size += size;
-//     }
-// }
+  const fileSystem = new Fs("/");
+  let currentDirectory: Dir = fileSystem.root;
+  lines.shift();
 
-// class Fs {
-//   root: Dir;
-//   constructor(dirName: string) {
-//     this.root = new Dir(dirName)
-//   }
+  while(lines.length > 0) {
+    const line = lines.shift() as string;
 
-//   addDir(parent:Dir, dirName:string) {
-//     const dir = new Dir(dirName, parent);
-//     parent.subDirectories.push(dir);
-//     return dir;
-//   }
-// }
+    if(line[0] === "$") {
+      const args = line.split(" ")
 
-// function partOne() {
-//   const lines = data.split("\n");
+      if(args[1] === "cd") {
+        if(args[2] === "..") {
+          currentDirectory = currentDirectory.parentDir as Dir;
+        } else {
+          const dir = fileSystem.addDir(currentDirectory, args[2])
+          currentDirectory = dir;
+        }
 
-//   const fileSystem = new Fs("/");
-//   let currentDirectory: Dir = fileSystem.root;
-//   lines.shift();
+      } else if(args[1] === "ls") {
 
-//   while(lines.length > 0) {
-//     const line = lines.shift() as string;
+        while(lines.length > 0 && lines[0][0] !== "$") {
+          let currLine = lines.shift() as string;
 
-//     if(line[0] === "$") {
-//       const args = line.split(" ")
+          // whilst the next line isnt a command...
+          const lineItem = currLine?.split(" ");
+          if(lineItem[0] !== "dir") {
+            currentDirectory.addFile(lineItem[1], Number(lineItem[0]))
+          }
+        }
+      } else {
+        console.log("missing command " + args[1]);
+      }
+    }
+  }
 
-//       if(args[1] === "cd") {
-//         if(args[2] === "..") {
-//           currentDirectory = currentDirectory.parentDir as Dir;
-//         } else {
-//           const dir = fileSystem.addDir(currentDirectory, args[2])
-//           currentDirectory = dir;
-//         }
+  let tt = 0;
+  const dirs = [];
+  dirs.push(...fileSystem.root.subDirectories);
+  while(dirs.length > 0) {
+    const curr  = dirs.shift() as Dir;
+    if(curr?.size as number < 100000) {
+      tt = tt + curr?.size as number;
+    }
+    dirs.push(...curr?.subDirectories);
+  }
+  return tt;
+}
 
-//       } else if(args[1] === "ls") {
-
-//         while(lines.length > 0 && lines[0][0] !== "$") {
-//           let currLine = lines.shift() as string;
-
-//           // whilst the next line isnt a command...
-//           const lineItem = currLine?.split(" ");
-//           if(lineItem[0] !== "dir") {
-//             currentDirectory.addFile(lineItem[1], Number(lineItem[0]))
-//           }
-//         }
-//       } else {
-//         console.log("misisng command " + args[1]);
-//       }
-//     }
-//   }
-
-//   let tt = 0;
-//   const dirs = [];
-//   dirs.push(...fileSystem.root.subDirectories);
-//   while(dirs.length > 0) {
-//     const curr  = dirs.shift() as Dir;
-//     if(curr?.size as number < 100000) {
-//       tt = tt + curr?.size as number;
-//     }
-//     dirs.push(...curr?.subDirectories);
-//   }
-//   return tt;
-// }
-
-// console.log(partOne());
-
-// // // create tree datastructure.
-
-
+console.log(partOne());
 
 // // const lines = String(data).split(/\r?\n/);
 // // const dirs: any = {};
