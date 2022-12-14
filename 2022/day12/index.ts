@@ -2,8 +2,8 @@ import fs from "node:fs/promises";
 
 console.log(`Day twelve`);
 
-const data = await fs.readFile("day12/test-data.txt", {encoding: "utf8"});
-// const data = await fs.readFile("day12/data.txt", { encoding: "utf8" });
+// const data = await fs.readFile("day12/test-data.txt", {encoding: "utf8"});
+const data = await fs.readFile("day12/data.txt", { encoding: "utf8" });
 const lines = data.split("\n");
 
 type Point = {
@@ -37,15 +37,13 @@ function partOne() {
 
 function partTwo() {
   const input = lines.map((line) => line.split(""));
-  let startPoint: any = {}, endPoint: any = {};
-
+  let endPoint: any = {};
   const values = input.map((row, yIndex) => {
     return row.map((val, xIndex) => {
-      if(val === "S") {
-        startPoint = {x: xIndex, y:yIndex};
+      if (val === "S" || val === "a") {
         return 0; // start val
-      } else if(val === "E") {
-        endPoint = {x: xIndex, y: yIndex};
+      } else if (val === "E") {
+        endPoint = { x: xIndex, y: yIndex };
         return 26; // end val
       }
       // console.log(`val: ${val} charCode: ${val.charCodeAt(0)-96}`);
@@ -55,11 +53,6 @@ function partTwo() {
   });
 
   const {dist, prev} = dijkstraAlgo2(values, endPoint as Point);
-  // const eps = dist.filter((val: any) => {
-  //   return endPoints.findIndex((end) => {
-  //     return pointToUid(end) === val;
-  //   })
-  // })
   return dist;
 }
 
@@ -123,7 +116,9 @@ function dijkstraAlgo2(vals: number[][], startPoint:{x:number,y:number}) {
 
   while(queue.length) {
     let u:any = null;
-    let i:any;
+    let i: any;
+
+    // this is to remove the next shortest one to figure out what neighbours to check next.
     for(const [index, val] of Object.entries(queue)) {
     // if min is null or the val is closer than min swap
       if(u === null || dist[val] < dist[u]) {
@@ -133,6 +128,7 @@ function dijkstraAlgo2(vals: number[][], startPoint:{x:number,y:number}) {
     }
 
     const point = uidToPoint(u);
+
     if(vals[point.y][point.x] === 0) {
       return {dist:dist[u]};
     }
@@ -140,14 +136,14 @@ function dijkstraAlgo2(vals: number[][], startPoint:{x:number,y:number}) {
     queue.splice(parseInt(i),1) // I hate splice.
 
     const neighbors = getNeighbors2(point, vals);
-      for(const neighbor of neighbors) {
-        if(queue.includes(neighbor)) {
-          const alt = dist[u] + 1;
-          if(alt < dist[neighbor]) {
-            dist[neighbor] = alt;
-            prev[neighbor] = u;
-          }
+    for(const neighbor of neighbors) {
+      if(queue.includes(neighbor)) {
+        const alt = dist[u] + 1;
+        if(alt < dist[neighbor]) {
+          dist[neighbor] = alt;
+          prev[neighbor] = u;
         }
+      }
     }
   }
   return {dist, prev}
@@ -186,16 +182,16 @@ function getNeighbors2(p: Point, data:number[][]) {
   const neighbors = [];
 
   // if(!false) {
-    if(y+1 < data.length && data[y+1][x] <= data[y][x]-1) {
+    if(y+1 < data.length && data[y+1][x] >= data[y][x]-1) {
       neighbors.push(pointToUid({x,y:y+1}))
     }
-    if(y-1 >= 0 && data[y-1][x] <= data[y][x]-1) {
+    if(y-1 >= 0 && data[y-1][x] >= data[y][x]-1) {
       neighbors.push(pointToUid({x,y:y-1}));
     }
-    if(x+1 < data[y].length && data[y][x+1] <= data[y][x]-1) {
+    if(x+1 < data[y].length && data[y][x+1] >= data[y][x]-1) {
       neighbors.push(pointToUid({x:x+1,y}));
     }
-    if(x-1 >= 0 && data[y][x-1] <= data[y][x]-1) {
+    if(x-1 >= 0 && data[y][x-1] >= data[y][x]-1) {
       neighbors.push(pointToUid({x:x-1,y}));
     }
   return neighbors;
@@ -233,5 +229,5 @@ function uidToPoint(int: number): Point {
 19      return dist[], prev[]
  */
 
-// console.log(partOne());
+console.log(partOne());
 console.log(partTwo());
