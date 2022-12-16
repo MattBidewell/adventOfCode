@@ -2,12 +2,13 @@ import fs from "node:fs/promises";
 
 console.log(`Day fourteen`);
 
-const data = await fs.readFile("day14/test-data.txt", {encoding: "utf8"});
-// const data = await fs.readFile("day14/data.txt", { encoding: "utf8" });
+// const data = await fs.readFile("day14/test-data.txt", {encoding: "utf8"});
+const data = await fs.readFile("day14/data.txt", { encoding: "utf8" });
 const lines = data.split("\n");
 
 function partOne() {
 
+  // we use the min and max to normalise the x,y to make them more manageable
   let maxY: number = 0; // test - 9
   let minY: number = -1;
   let maxX: number = 0; // test - 503
@@ -26,14 +27,14 @@ function partOne() {
       });
   });
 
-  const grid = new Array(maxY);
+  const grid = new Array(maxY + 1);
   for (let i = 0; i < grid.length; i++) {
-    grid[i] = new Array(maxX - minX + 1).fill(" ");
+    grid[i] = new Array(maxX - minX + 1).fill(".");
   }
 
   for (const rockFormation of rockFormations) {
     const [startX, startY] = rockFormation.shift() as number[];
-    grid[startY][maxX - startX] = "#";
+    grid[startY][startX - minX] = "#";
     let currX = startX;
     let currY = startY;
     for (const rock of rockFormation) {
@@ -41,18 +42,49 @@ function partOne() {
       while (currX !== x) {
         if (currX > x) currX--;
         if (currX < x) currX++
-        grid[y][maxX - currX]= "#";
+        grid[y][currX - minX] = "#";
       }
       while (currY !== y) {
         if (currY > y) currY--;
         if (currY < y) currY++
-        grid[currY][maxX - x] = "#";
+        grid[currY][x - minX] = "#";
+      }
+    }
+  }
+
+  const sandStartPoint = 500 - minX;
+  let grains = 0;
+  while(true) {
+    // grid[0][sandStartPoint] = "O";
+    let nextX = sandStartPoint;
+    let nextY = 0;
+    let settled = false;
+
+    while (!settled) {
+      if (nextY < 0 || nextX < 0 || nextY > grid.length - 1 || nextX > grid[0].length - 1) {
+        return grains;
+      }
+      if (grid[nextY][nextX] === ".") {
+        nextY++;
+        continue;
+      }
+
+      if (grid[nextY][nextX - 1] === ".") {
+        nextX--;
+        continue;
+      } else if (grid[nextY][nextX + 1] === ".") {
+        nextX++;
+        continue
+      } else {
+        grid[nextY - 1][nextX] = "O";
+        settled = true;
+        grains++;
       }
     }
   }
 
   console.table(grid);
-  return 0;
+  return grains - 1;
 }
 
 function partTwo() {
