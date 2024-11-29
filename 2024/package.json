@@ -1,0 +1,22 @@
+{
+  "name": "2024",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "generate": "tsx ./support/generate.ts",
+    "start": "tsx ./support/start.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "ts-node": "^10.9.1",
+    "tsx": "^4.19.2"
+  }
+}
