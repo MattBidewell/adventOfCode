@@ -18,18 +18,22 @@ const directionMap = {
   "^": {
     move: [-1, 0],
     newDirection: ">",
+    marker: "-",
   },
   ">": {
     move: [0, 1],
     newDirection: "v",
+    marker: "|",
   },
   v: {
     move: [1, 0],
     newDirection: "<",
+    marker: "-",
   },
   "<": {
     move: [0, -1],
     newDirection: "^",
+    marker: "|",
   },
 } as const;
 
@@ -61,7 +65,7 @@ function part1(input: string) {
     }
   }
 
-  let steps = 1;
+  let steps = 0;
 
   while (nextPosition(currentPosition, grid, currentDirection) !== null) {
     let [newx, newy] = nextPosition(
@@ -96,6 +100,125 @@ function part1(input: string) {
   return steps;
 }
 
-function part2(input: string[]) {
-  return "";
+function part2(input: string) {
+  const grid = input.split("\n").filter((x) => x.length > 0);
+
+  let currentPosition = [];
+  let currentDirection = "^" as keyof typeof directionMap;
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      if (grid[i][j] === currentDirection) {
+        currentPosition.push(i, j);
+      }
+    }
+  }
+
+  let loops = 0;
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      if (!["#", "^"].includes(grid[i][j])) {
+        const gridClone = [...grid];
+        gridClone[i] =
+          gridClone[i].slice(0, j) + "#" + gridClone[i].slice(j + 1);
+        const canLoop = loop(currentPosition, gridClone, currentDirection);
+        if (canLoop) {
+          loops++;
+        }
+      }
+    }
+  }
+
+  return loops;
+
+  // while (nextPosition(currentPosition, grid, currentDirection) !== null) {
+  //   let [newx, newy] = nextPosition(
+  //     currentPosition,
+  //     grid,
+  //     currentDirection
+  //   ) as number[];
+
+  //   if (grid[newx][newy] === "#") {
+  //     currentDirection =
+  //       directionMap[currentDirection as keyof typeof directionMap]
+  //         .newDirection;
+
+  //     [newx, newy] = nextPosition(
+  //       currentPosition,
+  //       grid,
+  //       currentDirection
+  //     ) as number[];
+  //   }
+
+  //   // clone the grid
+  //   const gridClone = [...grid];
+  //   console.log(gridClone.join("\n"));
+  //   console.log("\n\n");
+  //   const canLoop = loop(currentPosition, gridClone, currentDirection);
+  //   if (canLoop) {
+  //     loops++;
+  //   }
+  //   // mark as visited
+  //   grid[newx] = grid[newx].slice(0, newy) + "X" + grid[newx].slice(newy + 1);
+
+  //   // console.log(grid.join("\n"));
+  //   // console.log("\n");
+
+  //   currentPosition = [newx, newy];
+  // }
+  // return loops;
 }
+
+function loop(
+  currentPosition: number[],
+  grid: string[],
+  currentDirection: keyof typeof directionMap
+) {
+  const positionsVisted = new Set<string>();
+
+  // old way
+  // const np = nextPosition(currentPosition, grid, currentDirection);
+  // set nextposition as object
+  // if (np === null) return false;
+  // const [npx, npy] = np;
+  // grid[npx] = grid[npx] =
+  //   grid[npx].slice(0, npy) + "O" + grid[npx].slice(npy + 1);
+
+  while (nextPosition(currentPosition, grid, currentDirection) !== null) {
+    let [newx, newy] = nextPosition(
+      currentPosition,
+      grid,
+      currentDirection
+    ) as number[];
+
+    if (["#", "O"].includes(grid[newx][newy])) {
+      currentDirection =
+        directionMap[currentDirection as keyof typeof directionMap]
+          .newDirection;
+
+      [newx, newy] = nextPosition(
+        currentPosition,
+        grid,
+        currentDirection
+      ) as number[];
+    }
+
+    if (positionsVisted.has(`${newx},${newy},${currentDirection}`)) {
+      // console.log(grid.join("\n"));
+      return true;
+    } else {
+      positionsVisted.add(`${newx},${newy},${currentDirection}`);
+    }
+
+    // mark as visited
+    grid[newx] = grid[newx].slice(0, newy) + "X" + grid[newx].slice(newy + 1);
+
+    // console.log(grid.join("\n"));
+    // console.log("\n");
+
+    currentPosition = [newx, newy];
+  }
+
+  return false;
+};
