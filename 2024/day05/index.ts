@@ -71,6 +71,8 @@ function part2(input: string) {
   for (const pages of files) {
     // iterate through each page
     if (isOrdered(pages, rules)) continue;
+
+    // sort the unordered pages by using the rule set above
     const sortedPages = pages.sort((a, b) => {
       const ruleA = rules.get(`${a},${b}`);
       if (ruleA === undefined) return 0;
