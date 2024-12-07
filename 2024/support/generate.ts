@@ -53,14 +53,30 @@ import { getInput } from "../support";
 
 
 export function run() {
-  const input1 = getInput(import.meta.url, 'input1');
-  const input2 = getInput(import.meta.url, 'input2');
+
+  const testInput = getInput(import.meta.url, "input1");
+  const input = getInput(import.meta.url, "input2");
+
+  for (const data of [testInput, input]) {
+    console.log("---");
+    console.log(part1(data));
+    console.log(part2(data));
+    console.log("---");
+  }
 }
-  `
+
+function part1(input: string) {
+  return '';
+}
+
+function part2(input: string) {
+  return '';
+}
+  `;
 }
 
 function extractDay() {
-  const entries = fs.readdirSync('./');
+  const entries = fs.readdirSync("./");
   const dayDirs = entries.filter((entry) => /^day\d{2}$/.test(entry));
   const dayNumbers = dayDirs.map((dir) => parseInt(dir.replace("day", ""), 10));
   const maxDay = dayNumbers.length > 0 ? Math.max(...dayNumbers) : 0;
