@@ -59,8 +59,12 @@ export function run() {
 
   for (const data of [testInput, input]) {
     console.log("---");
+    console.time("part1");
     console.log(part1(data));
+    console.timeEnd("part1");
+    console.time("part2");
     console.log(part2(data));
+    console.timeEnd("part2");
     console.log("---");
   }
 }
