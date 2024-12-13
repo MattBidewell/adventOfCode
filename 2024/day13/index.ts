@@ -47,5 +47,26 @@ function part1(input: string) {
 }
 
 function part2(input: string) {
-  return "";
+  const groups = input.trim().split("\n\n");
+  let total = 0;
+
+  for (const group of groups) {
+    const matches = group.match(/\d+/g)?.map(Number);
+
+    if (!matches) continue;
+
+    let [ax, ay, bx, by, px, py] = matches;
+
+    px += 10000000000000;
+    py += 10000000000000;
+
+    const ca = (px * by - py * bx) / (ax * by - ay * bx);
+    const cb = (px - ax * ca) / bx;
+
+    if (ca % 1 === 0 && cb % 1 === 0) {
+      total += ca * 3 + cb;
+    }
+  }
+
+  return total;
 }
